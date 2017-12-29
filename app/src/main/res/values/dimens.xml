@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="Portal_Button_width">12dp</dimen>
+    <dimen name="Portal_Button_Height">6dp</dimen>
+</resources>
