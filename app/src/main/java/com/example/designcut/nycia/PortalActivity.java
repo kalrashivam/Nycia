@@ -1,6 +1,7 @@
 package com.example.designcut.nycia;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PortalActivity extends AppCompatActivity {
+
+    private static final int REQUEST_SIGNUP = 0;
 
   @BindView(R.id.Portal_Button)
     Button Portal;
@@ -63,6 +66,20 @@ public class PortalActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        _signupLink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivityForResult(intent, REQUEST_SIGNUP);
+//                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            }
+        });
+
     }
 
   public void change(int i, Button button){

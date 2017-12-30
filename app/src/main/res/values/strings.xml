@@ -3,4 +3,6 @@
     <string name="Portal_salon_Button">For Salon</string>
     <string name="Portal_user_Button">For User</string>
     <string name="Sign_up">No account yet? Create on</string>
+    <string name="Back_to_login_text">Already a member? Login</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
