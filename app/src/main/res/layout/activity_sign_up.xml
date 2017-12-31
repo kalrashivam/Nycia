@@ -29,14 +29,7 @@
             android:layout_marginBottom="8dp"/>
 
 
-        <!-- Address Label -->
-        <EditText android:id="@+id/input_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
-            android:hint="Address"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+
 
 
         <!--  Email Label -->

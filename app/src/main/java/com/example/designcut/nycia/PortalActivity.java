@@ -19,6 +19,8 @@ public class PortalActivity extends AppCompatActivity {
 
     private static final int REQUEST_SIGNUP = 0;
 
+    public static int Type_Login =0;
+
   @BindView(R.id.Portal_Button)
     Button Portal;
 
@@ -47,6 +49,7 @@ public class PortalActivity extends AppCompatActivity {
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
                change(1, Portal);
+               Type_Login=0;
            }
        });
 
@@ -55,6 +58,7 @@ public class PortalActivity extends AppCompatActivity {
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
                change(0,Portal_user);
+               Type_Login=1;
 
            }
        });
@@ -72,9 +76,13 @@ public class PortalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+               if(Type_Login==0){ Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivityForResult(intent, REQUEST_SIGNUP);
 //                startActivity(intent);
+                      }else{
+                   Intent intent = new Intent(getApplicationContext(), Salon_SignupActivity.class);
+                   startActivityForResult(intent, REQUEST_SIGNUP);
+               }
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
