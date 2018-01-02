@@ -7,7 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.designcut.nycia.MainActivity">
 
-  
+
+    <android.support.v7.widget.ContentFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/master"/>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
