@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    manager.beginTransaction().replace(R.id.master,new AccountFragment()).commit();
+                    manager.beginTransaction().replace(R.id.master,new HomeFragment()).commit();
                     return true;
                 case R.id.navigation_search:
                     manager.beginTransaction().replace(R.id.master,new SearchFragment()).commit();
