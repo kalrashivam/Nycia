@@ -3,6 +3,7 @@ package com.example.designcut.nycia.user;
 
 import android.app.LauncherActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.view.menu.ListMenuItemView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -39,6 +42,8 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
         return new ViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -54,6 +59,8 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
         return list.size();
     }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
            public TextView head;
@@ -65,6 +72,8 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
             head =(TextView) itemView.findViewById(R.id.Heading);
             sub =(TextView) itemView.findViewById(R.id.Subheading);
         }
+
+
     }
 
 

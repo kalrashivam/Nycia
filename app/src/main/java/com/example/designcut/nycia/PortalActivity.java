@@ -48,6 +48,7 @@ public class PortalActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
+
                change(1, Portal);
                Type_Login=0;
            }
@@ -57,6 +58,8 @@ public class PortalActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
+
+
                change(0,Portal_user);
                Type_Login=1;
 
@@ -97,7 +100,6 @@ public class PortalActivity extends AppCompatActivity {
             Portal_type=false;
         }
 
-        button.setBackgroundColor(getResources().getColor(R.color.monsoon));
   }
 
     public void login() {
