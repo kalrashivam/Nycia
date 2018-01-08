@@ -33,5 +33,7 @@
     <string name="action_settings">Settings</string>
     <string name="owner_name">Salon Name</string>
     <string name="owner_des">Owner Des</string>
+    <string name="settings">Settings</string>
+    <string name="add_logo">Add Logo</string>
 
 </resources>
