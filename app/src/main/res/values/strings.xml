@@ -35,5 +35,6 @@
     <string name="owner_des">Owner Des</string>
     <string name="settings">Settings</string>
     <string name="add_logo">Add Logo</string>
+    <string name="maximum_bookings">Enter the maximum no. of bookings u want in a day</string>
 
 </resources>

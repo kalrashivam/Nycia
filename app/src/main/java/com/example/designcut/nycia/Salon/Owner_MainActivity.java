@@ -82,8 +82,12 @@ public class Owner_MainActivity extends AppCompatActivity
             startActivity(ImageIntent);
             // Handle the camera action
         } else if (id == R.id.nav_Max_Seats) {
+            Intent MaxIntent = new Intent(Owner_MainActivity.this, Max_BookingsActivity.class);
+            startActivity(MaxIntent);
 
         } else if (id == R.id.nav_Overall_Details) {
+            Intent UpdateIntent = new Intent(Owner_MainActivity.this, Update_DetailsActivity.class);
+            startActivity(UpdateIntent);
 
         }
 

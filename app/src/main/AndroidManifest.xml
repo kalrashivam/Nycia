@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PortalActivity"></activity>
+        <activity android:name=".PortalActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".Salon_SignupActivity" />
         <activity
@@ -29,8 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Salon.OwnerADDIMage_Activity"
-            android:theme="@style/MainActivuty"></activity>
+        <activity
+            android:name=".Salon.OwnerADDIMage_Activity"
+            android:theme="@style/MainActivuty" />
+
+        <activity
+            android:name=".Salon.Max_BookingsActivity"
+            android:theme="@style/MainActivuty" />
+
+        <activity android:name=".Salon.Update_DetailsActivity"
+            android:theme="@style/MainActivuty"/>
     </application>
 
 </manifest>

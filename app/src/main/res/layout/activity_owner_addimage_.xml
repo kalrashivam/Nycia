@@ -19,27 +19,27 @@
             android:layout_height="180dp"
             android:src="@drawable/ic_image_black_24dp"
             android:id="@+id/Image"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:layout_margin="4dp">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Image"
-            android:textSize="16dp"
-            android:layout_margin="2dp"
-            android:id="@+id/add_image"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_margin="4dp">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Image"
+                    android:textSize="16dp"
+                    android:layout_margin="2dp"
+                    android:id="@+id/add_image"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload Image"
-            android:textSize="16dp"
-            android:layout_margin="2dp"
-            android:id="@+id/Upload_Image"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Image"
+                    android:textSize="16dp"
+                    android:layout_margin="2dp"
+                    android:id="@+id/Upload_Image"/>
 
         </LinearLayout>
     </LinearLayout>
