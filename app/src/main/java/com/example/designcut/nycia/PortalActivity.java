@@ -2,6 +2,7 @@ package com.example.designcut.nycia;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PortalActivity extends AppCompatActivity {
 
@@ -33,10 +44,16 @@ public class PortalActivity extends AppCompatActivity {
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup)
     TextView _signupLink;
-  //Boolean to return Portal type
-    Boolean Portal_type;
+
+      public int color_user=0;
+      public int color_salon=0;
 
     private static final String TAG = "PortalActivity";
+//Url for sending data to login server
+    private String Login_Url = "http://localhost:8080/login";
+// Setting Mediatype For Okhttp
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +66,12 @@ public class PortalActivity extends AppCompatActivity {
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
 
-               change(1, Portal);
+               color_user=0;
+               color_salon=1;
+               setcolor(Portal_user,color_user);
+               setcolor(Portal,color_salon);
                Type_Login=0;
+
            }
        });
 
@@ -58,9 +79,10 @@ public class PortalActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
                //A function to set the Portal type and to dynamically change the button look
-
-
-               change(0,Portal_user);
+               color_user=1;
+               color_salon=0;
+               setcolor(Portal_user,color_user);
+               setcolor(Portal,color_salon);
                Type_Login=1;
 
            }
@@ -93,14 +115,13 @@ public class PortalActivity extends AppCompatActivity {
 
     }
 
-  public void change(int i, Button button){
-        if(i ==0){
-            Portal_type=true;
+    public void setcolor(Button button,int x){
+        if(x==1){
+            button.setTextColor(getResources().getColor(R.color.black));
         }else{
-            Portal_type=false;
+            button.setTextColor(getResources().getColor(R.color.white));
         }
-
-  }
+    }
 
     public void login() {
         Log.d(TAG, "Login");
@@ -121,12 +142,35 @@ public class PortalActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
+        final JSONObject Body = new JSONObject();
+        try {
+            Body.put("email",email);
+            Body.put("password",password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
         // TODO: Implement my Api authentication logic here.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    String test =post(Login_Url,Body.toString());
+                                    Log.v(TAG,"post response:    "+  test);
+                                    Toast.makeText(getApplicationContext(),test,Toast.LENGTH_LONG).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
                         onLoginSuccess();
                         // onLoginFailed();
                         progressDialog.dismiss();
@@ -166,6 +210,19 @@ public class PortalActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
+    }
+
+    String post(String url,  String json) throws IOException {
+        OkHttpClient client =new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Response response = client.newCall(request).execute();
+
+        Log.e(TAG,"post response:    "+ response.body().string() );
+        return response.body().string();
     }
 
 

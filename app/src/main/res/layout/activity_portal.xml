@@ -29,32 +29,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <android.support.v7.widget.ButtonBarLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="15dp">
+
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Portal_Button"
-                android:text="@string/Portal_user_Button"
-                android:clickable="true"/>
-        </android.support.v7.widget.ButtonBarLayout>
+                android:layout_marginLeft="100dp"
+                android:text="@string/Portal_user_Button" />
 
-        <android.support.v7.widget.ButtonBarLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Portal_User_Button"
-                android:text="@string/Portal_salon_Button"
-                android:clickable="false"/>
-        </android.support.v7.widget.ButtonBarLayout>
+                android:text="@string/Portal_salon_Button" />
+
     </LinearLayout>
     
     <LinearLayout
