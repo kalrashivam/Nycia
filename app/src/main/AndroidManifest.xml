@@ -3,7 +3,7 @@
     package="com.example.designcut.nycia">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,14 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PortalActivity">
-        </activity>
+        <activity android:name=".PortalActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".Salon_SignupActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/MainActivuty" >
+            android:theme="@style/MainActivuty">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,19 +29,18 @@
         <activity
             android:name=".Salon.Owner_MainActivity"
             android:label="@string/title_activity_owner__main"
-            android:theme="@style/MainActivuty">
-
-        </activity>
+            android:theme="@style/MainActivuty" />
         <activity
             android:name=".Salon.OwnerADDIMage_Activity"
             android:theme="@style/MainActivuty" />
-
         <activity
             android:name=".Salon.Max_BookingsActivity"
             android:theme="@style/MainActivuty" />
-
-        <activity android:name=".Salon.Update_DetailsActivity"
-            android:theme="@style/MainActivuty"/>
+        <activity
+            android:name=".Salon.Update_DetailsActivity"
+            android:theme="@style/MainActivuty" />
+        <activity android:name=".user.State_Search_Activity" />
+        <activity android:name=".user.Your_OrdersActivity"></activity>
     </application>
 
 </manifest>

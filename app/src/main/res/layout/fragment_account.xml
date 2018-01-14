@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/Change_state">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +74,8 @@
                 android:padding="6dp"
                 android:text="@string/State"
                 android:textColor="@android:color/holo_blue_dark"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:id="@+id/Change_state"/>
 
         </LinearLayout>
 
