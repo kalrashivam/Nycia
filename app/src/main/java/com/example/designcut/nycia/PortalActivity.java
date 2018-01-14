@@ -1,7 +1,10 @@
 package com.example.designcut.nycia;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.designcut.nycia.Salon.Owner_MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +35,10 @@ public class PortalActivity extends AppCompatActivity {
 
     private static final int REQUEST_SIGNUP = 0;
 
+    ConnectionDetector cd;
+
     public static int Type_Login =0;
+   public String Token =null;
 
   @BindView(R.id.Portal_Button)
     Button Portal;
@@ -47,10 +55,11 @@ public class PortalActivity extends AppCompatActivity {
 
       public int color_user=0;
       public int color_salon=0;
+    String test= null;
 
     private static final String TAG = "PortalActivity";
 //Url for sending data to login server
-    private String Login_Url = "http://localhost:8080/login";
+    private String Login_Url = "http://18.217.140.197:8080/login";
 // Setting Mediatype For Okhttp
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -60,6 +69,11 @@ public class PortalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_portal);
         ButterKnife.bind(this);
+
+
+       cd = new ConnectionDetector(this);
+
+
 
        Portal.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -88,13 +102,15 @@ public class PortalActivity extends AppCompatActivity {
            }
        });
 
+
+
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    login();
+                }
+            });
 
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
@@ -142,37 +158,56 @@ public class PortalActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
+        if(Type_Login==0){
+            Token= "users";
+        }else{
+                Token ="saloons";
+        }
+
+
+
+
         final JSONObject Body = new JSONObject();
         try {
+            Body.put("token",Token);
             Body.put("email",email);
             Body.put("password",password);
+            Log.e(Token, email +password);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        if(cd.isConnected()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        test = post(Login_Url, Body.toString());
+                        Log.e(TAG, "post response:    " + test);
 
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }else{
+            Toast.makeText(getApplicationContext(),"Internet network isn't there ",Toast.LENGTH_SHORT).show();
+        }
         // TODO: Implement my Api authentication logic here.
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    String test =post(Login_Url,Body.toString());
-                                    Log.v(TAG,"post response:    "+  test);
-                                    Toast.makeText(getApplicationContext(),test,Toast.LENGTH_LONG).show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
 
 
+                    if(test=="0") {
+                        onLoginFailed();
+                    }else{
                         onLoginSuccess();
-                        // onLoginFailed();
+                    }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -203,25 +238,31 @@ public class PortalActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        finish();
+        if(Type_Login==0){
+            Intent myintent = new Intent(PortalActivity.this, MainActivity.class );
+            startActivity(myintent);
+        }else{
+            Intent myintent = new Intent(PortalActivity.this, Owner_MainActivity.class);
+            startActivity(myintent);
+        }
     }
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
-        _loginButton.setEnabled(true);
+//        _loginButton.setEnabled(true);
     }
 
     String post(String url,  String json) throws IOException {
         OkHttpClient client =new OkHttpClient();
+
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
-        Response response = client.newCall(request).execute();
 
-        Log.e(TAG,"post response:    "+ response.body().string() );
+        Response response = client.newCall(request).execute();
         return response.body().string();
     }
 

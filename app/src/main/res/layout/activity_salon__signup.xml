@@ -40,9 +40,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
-            android:hint="Address"
+            android:hint="Locality"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"/>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+
+             <EditText
+                 android:id="@+id/input_state"
+                 android:layout_width="120dp"
+                 android:layout_height="wrap_content"
+                 android:hint="State"
+                 android:inputType="textPostalAddress"
+                 android:layout_marginTop="8dp"
+                 android:layout_marginBottom="8dp"/>
+
+             <EditText
+                 android:id="@+id/input_Locality_no"
+                 android:layout_width="120dp"
+                 android:layout_height="wrap_content"
+                 android:hint="Address"
+                 android:inputType="textPostalAddress"
+                 android:layout_marginLeft="10dp"
+                 android:layout_marginTop="8dp"
+                 android:layout_marginBottom="8dp"/>
+
+
+         </LinearLayout>
+
+
 
         </LinearLayout>
 

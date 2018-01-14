@@ -4,11 +4,12 @@ package com.example.designcut.nycia.user;
 import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.view.menu.ListMenuItemView;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.designcut.nycia.R;
@@ -45,12 +46,24 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         Data listItem = list.get(position);
 
         holder.head.setText(listItem.getHeading());
         holder.sub.setText(listItem.getSubheading());
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myintent = new Intent(context, Salon_Details.class);
+
+                Bundle mybundle = new Bundle();
+                mybundle.putInt("position",position);
+                myintent.putExtras(mybundle);
+
+                context.startActivity(myintent);
+            }
+        });
 
     }
 
@@ -65,12 +78,14 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
 
            public TextView head;
            public TextView sub;
+           public Button button;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             head =(TextView) itemView.findViewById(R.id.Heading);
             sub =(TextView) itemView.findViewById(R.id.Subheading);
+            button =(Button) itemView.findViewById(R.id.Make_Booking);
         }
 
 

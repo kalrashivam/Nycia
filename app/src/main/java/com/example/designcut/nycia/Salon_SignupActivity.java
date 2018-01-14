@@ -14,8 +14,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.designcut.nycia.Salon.Owner_MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Salon_SignupActivity extends AppCompatActivity {
     private static final String TAG = "Salon_SignupActivity";
@@ -35,6 +47,16 @@ public class Salon_SignupActivity extends AppCompatActivity {
     Button sign_up_Button;
     @BindView(R.id.link_login)
     TextView login_Link;
+    @BindView(R.id.input_Locality_no) EditText Locality;
+    @BindView(R.id.input_state) EditText State;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    String Url ="http://10.0.2.2:8080/login";
+
+    String test;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +125,8 @@ public class Salon_SignupActivity extends AppCompatActivity {
             }
         });
         int Type= Type_int;
+        String Locality_text = Locality.getText().toString();
+        String State_text = State.getText().toString();
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
         String email = _emailText.getText().toString();
@@ -112,13 +136,39 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
         // TODO: Implement My Api signup logic here.
 
+       final JSONObject Body = new JSONObject();
+
+        try {
+            Body.put("token","saloons");
+            Body.put("name",name);
+            Body.put("email",email);
+            Body.put("mobile",mobile);
+            Body.put("password",password);
+            Body.put("locality",address);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+              try{  test = post(Url,Body.toString());
+              }catch (IOException e){
+                  e.printStackTrace();
+              }
+            }
+        }).start();
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        if(test=="exists"){
+                            onSignupFailed();
+                        }else {
+                            onSignupSuccess();
+                        }// onSignupFailed();
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -127,7 +177,8 @@ public class Salon_SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         sign_up_Button.setEnabled(true);
         setResult(RESULT_OK, null);
-        finish();
+        Intent myintent = new Intent(Salon_SignupActivity.this, Owner_MainActivity.class);
+        startActivity(myintent);
     }
 
     public void onSignupFailed() {
@@ -138,7 +189,8 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
     public boolean validate() {
         boolean valid = true;
-
+        String Locality_text = Locality.getText().toString();
+        String State_text = State.getText().toString();
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
         String email = _emailText.getText().toString();
@@ -158,6 +210,20 @@ public class Salon_SignupActivity extends AppCompatActivity {
             valid = false;
         } else {
             _addressText.setError(null);
+        }
+
+        if (Locality_text.isEmpty()) {
+            Locality.setError("Enter Valid Locality");
+            valid = false;
+        } else {
+            Locality.setError(null);
+        }
+
+        if (State_text.isEmpty()) {
+            State.setError("Enter Valid State");
+            valid = false;
+        } else {
+            State.setError(null);
         }
 
 
@@ -190,5 +256,18 @@ public class Salon_SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    String post(String url,  String json) throws IOException {
+        OkHttpClient client =new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
     }
 }

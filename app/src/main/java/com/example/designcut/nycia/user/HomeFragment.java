@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment {
         list.add(new Data("Hello2", "Checking2"));
         list.add(new Data("Hello3", "Checking3"));
         list.add(new Data("Hello4", "Checking4"));
+        list.add(new Data("Hello5", "Checking5"));
 
         adapter = new Recycler_adapter(list, getContext());
 

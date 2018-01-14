@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.designcut.nycia.R;
 
+import butterknife.BindView;
+
 
 public class SearchFragment extends Fragment {
 

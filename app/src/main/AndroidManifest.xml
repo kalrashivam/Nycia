@@ -3,6 +3,7 @@
     package="com.example.designcut.nycia">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -12,18 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".PortalActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>>
+        </activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".Salon_SignupActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/MainActivuty" />
+            android:theme="@style/MainActivuty" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".user.Salon_Details" />
         <activity
             android:name=".Salon.Owner_MainActivity"
