@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class PortalActivity extends AppCompatActivity {
 
-    private static final int REQUEST_SIGNUP = 0;
+
 
     ConnectionDetector cd;
 
@@ -56,6 +56,8 @@ public class PortalActivity extends AppCompatActivity {
       public int color_user=0;
       public int color_salon=0;
     String test= null;
+
+    String tester ="0";
 
     private static final String TAG = "PortalActivity";
 //Url for sending data to login server
@@ -118,11 +120,11 @@ public class PortalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                if(Type_Login==0){ Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
+                startActivity(intent);
 //                startActivity(intent);
                       }else{
                    Intent intent = new Intent(getApplicationContext(), Salon_SignupActivity.class);
-                   startActivityForResult(intent, REQUEST_SIGNUP);
+                   startActivity(intent);
                }
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -172,7 +174,7 @@ public class PortalActivity extends AppCompatActivity {
             Body.put("token",Token);
             Body.put("email",email);
             Body.put("password",password);
-            Log.e(Token, email +password);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -194,6 +196,7 @@ public class PortalActivity extends AppCompatActivity {
             }).start();
         }else{
             Toast.makeText(getApplicationContext(),"Internet network isn't there ",Toast.LENGTH_SHORT).show();
+            onLoginFailed();
         }
         // TODO: Implement my Api authentication logic here.
 
@@ -203,10 +206,13 @@ public class PortalActivity extends AppCompatActivity {
                         // On complete call either onLoginSuccess or onLoginFailed
 
 
-                    if(test=="0") {
+                    if(test.equals(tester)) {
                         onLoginFailed();
-                    }else{
+//                        onLoginSuccess();
+                    }else if(cd.isConnected()){
                         onLoginSuccess();
+                    }else{
+                        onLoginFailed();
                     }
                         progressDialog.dismiss();
                     }
@@ -226,8 +232,8 @@ public class PortalActivity extends AppCompatActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
+            _passwordText.setError("between 4 and 20 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
@@ -250,7 +256,7 @@ public class PortalActivity extends AppCompatActivity {
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
-//        _loginButton.setEnabled(true);
+        _loginButton.setEnabled(true);
     }
 
     String post(String url,  String json) throws IOException {

@@ -73,6 +73,8 @@
 
 
 
+
+
         </LinearLayout>
 
 
@@ -92,6 +94,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Type_Spinner"></Spinner>
+
+            <EditText
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:hint="Pincode"
+                android:inputType="textPostalAddress"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/pincode"/>
 
         </LinearLayout>
 

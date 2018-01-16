@@ -2,6 +2,10 @@ package com.example.designcut.nycia;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +43,8 @@ public class Salon_SignupActivity extends AppCompatActivity {
     Spinner Type_spinner;
     @BindView(R.id.input_name)
     EditText _nameText;
+    @BindView(R.id.pincode)
+    EditText pincode;
     @BindView(R.id.input_address) EditText _addressText;
     @BindView(R.id.input_email) EditText _emailText;
     @BindView(R.id.input_mobile) EditText _mobileText;
@@ -52,9 +59,16 @@ public class Salon_SignupActivity extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 
-    String Url ="http://10.0.2.2:8080/login";
+    String Url ="http://10.0.2.2:8080/signup";
 
-    String test;
+    String Salon_test = null;
+    String tester = "exists";
+
+    double latitude, longitude;
+
+    String Token ="saloons";
+
+    ConnectionDetector cd;
 
 
     @Override
@@ -68,7 +82,7 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
         Type_spinner.setAdapter(adapter);
 
-
+        cd = new ConnectionDetector(this);
 
         sign_up_Button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +139,12 @@ public class Salon_SignupActivity extends AppCompatActivity {
             }
         });
         int Type= Type_int;
+        String set_Type;
+        if(Type_int==0){
+            set_Type="Salon";
+        }else{
+            set_Type="Spa";
+        }
         String Locality_text = Locality.getText().toString();
         String State_text = State.getText().toString();
         String name = _nameText.getText().toString();
@@ -132,43 +152,84 @@ public class Salon_SignupActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
+        String text_pincode =pincode.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
+
+        String find_address_for= address +" "+Locality_text+" "+State_text + " "+ text_pincode;
+
+        Geocoder gc = new Geocoder(this);
+        try {
+            List<Address> list = gc.getFromLocationName(find_address_for, 1);
+            Address add = list.get(0);
+            latitude = add.getLatitude();
+            longitude =add.getLongitude();
+            Log.e(TAG,"Check lat"+latitude+longitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // TODO: Implement My Api signup logic here.
 
        final JSONObject Body = new JSONObject();
 
         try {
-            Body.put("token","saloons");
-            Body.put("name",name);
-            Body.put("email",email);
-            Body.put("mobile",mobile);
-            Body.put("password",password);
-            Body.put("locality",address);
+            Body.put("token" ,Token);
+            Body.put("name" ,name);
+            Body.put("address",address);
+            Body.put("locality",Locality_text);
+            Body.put("state",State_text);
+            Body.put("email" ,email);
+            Body.put("phone_no" ,mobile);
+            Body.put("type",set_Type);
+            Body.put("latitude",latitude);
+            Body.put("longitude",longitude);
+            Body.put("password" ,password);
+
+
+
+
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if(cd.isConnected()) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-              try{  test = post(Url,Body.toString());
-              }catch (IOException e){
-                  e.printStackTrace();
-              }
-            }
-        }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
+
+                    try {
+
+                       
+                        Salon_test = post(Url, Body.toString());
+                        Log.e(TAG, "check  "+Salon_test);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+
+        }else{
+            Toast.makeText(getApplicationContext(),"Internet network isn't there ",Toast.LENGTH_SHORT).show();
+            onSignupFailed();
+        }
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        if(test=="exists"){
+                        if(Salon_test.equals(tester)){
                             onSignupFailed();
-                        }else {
+                        }else if(cd.isConnected()) {
                             onSignupSuccess();
-                        }// onSignupFailed();
+                        }else{
+
+                             onSignupFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -176,9 +237,8 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         sign_up_Button.setEnabled(true);
-        setResult(RESULT_OK, null);
-        Intent myintent = new Intent(Salon_SignupActivity.this, Owner_MainActivity.class);
-        startActivity(myintent);
+        Intent myIntent =new Intent(Salon_SignupActivity.this, PortalActivity.class);
+        startActivity(myIntent);
     }
 
     public void onSignupFailed() {
@@ -248,7 +308,7 @@ public class Salon_SignupActivity extends AppCompatActivity {
             _passwordText.setError(null);
         }
 
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
+        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 20 || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
             valid = false;
         } else {
@@ -268,6 +328,9 @@ public class Salon_SignupActivity extends AppCompatActivity {
                 .build();
 
         Response response = client.newCall(request).execute();
+
         return response.body().string();
     }
+
+
 }

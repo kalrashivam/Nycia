@@ -12,8 +12,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -30,6 +40,21 @@ public class SignUpActivity extends AppCompatActivity {
     Button sign_up_Button;
     @BindView(R.id.link_login)
     TextView login_Link;
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+
+    String Url ="http://ec2-18-217-140-197.us-east-2.compute.amazonaws.com:8080/signup";
+
+
+    String Signup_test= null;
+
+    String tester="exists";
+
+    String Token="users";
+
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +77,12 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
+
             }
         });
+
+        cd= new ConnectionDetector(this);
 
     }
 
@@ -82,13 +111,55 @@ public class SignUpActivity extends AppCompatActivity {
 
         // TODO: Implement My Api signup logic here.
 
+
+       final JSONObject  Body = new JSONObject();
+
+        try {
+            Body.put("token",Token);
+            Body.put("name",name);
+            Body.put("email",email);
+            Body.put("phone_no",mobile);
+            Body.put("password",password);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+      if(cd.isConnected()) {
+
+
+          new Thread(new Runnable() {
+              @Override
+              public void run() {
+
+
+                  try {
+                      Signup_test = post(Url, Body.toString());
+                      Log.e(TAG,"check " +Signup_test);
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+              }
+          }).start();
+
+      }else{
+          Toast.makeText(getApplicationContext(),"Internet network isn't there ",Toast.LENGTH_SHORT).show();
+          onSignupFailed();
+      }
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        // depending on
+
+                        if(Signup_test.equals(tester)){
+                            onSignupFailed();
+                        }else if(cd.isConnected()){
+                            onSignupSuccess();
+                        }else {
+                            onSignupFailed();
+                            // onSignupFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -96,8 +167,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         sign_up_Button.setEnabled(true);
-        setResult(RESULT_OK, null);
-        finish();
+        Intent myintent=new Intent(SignUpActivity.this, PortalActivity.class);
+        startActivity(myintent);
     }
 
     public void onSignupFailed() {
@@ -139,14 +210,14 @@ public class SignUpActivity extends AppCompatActivity {
             _mobileText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
+            _passwordText.setError("between 4 and 20 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
 
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
+        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 20 || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
             valid = false;
         } else {
@@ -154,5 +225,21 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    String post(String url,  String json) throws IOException {
+        OkHttpClient client =new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
     }
 }

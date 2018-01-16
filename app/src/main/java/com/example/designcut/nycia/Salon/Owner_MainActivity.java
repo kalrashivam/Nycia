@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,9 +17,25 @@ import android.view.MenuItem;
 
 import com.example.designcut.nycia.R;
 
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class Owner_MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    //Url for sending data to login server
+    private String Login_Url = "http://18.217.140.197:8080/login";
+    // Setting Mediatype For Okhttp
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    String test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +54,22 @@ public class Owner_MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    test = post(Login_Url, Body.toString());
+//
+//
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Override
@@ -95,4 +128,18 @@ public class Owner_MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    String post(String url,  String json) throws IOException {
+        OkHttpClient client =new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
 }
