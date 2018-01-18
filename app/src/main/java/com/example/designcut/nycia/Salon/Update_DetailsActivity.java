@@ -1,6 +1,9 @@
 package com.example.designcut.nycia.Salon;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,17 +13,32 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.designcut.nycia.ConnectionDetector;
+import com.example.designcut.nycia.PortalActivity;
 import com.example.designcut.nycia.R;
 import com.example.designcut.nycia.Salon_SignupActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Update_DetailsActivity extends AppCompatActivity {
-    private static final String TAG = "Owner_updateActivity";
+
+    private static final String TAG = "Salon_UpdateActivity";
     ArrayAdapter<CharSequence> adapter;
 
     int Type_int;
@@ -28,40 +46,50 @@ public class Update_DetailsActivity extends AppCompatActivity {
     Spinner Type_spinner;
     @BindView(R.id.input_name)
     EditText _nameText;
+    @BindView(R.id.pincode)
+    EditText pincode;
     @BindView(R.id.input_address) EditText _addressText;
     @BindView(R.id.input_email) EditText _emailText;
     @BindView(R.id.input_mobile) EditText _mobileText;
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.input_reEnterPassword) EditText _reEnterPasswordText;
-    @BindView(R.id.btn_update)
-    Button Update;
+    @BindView(R.id.btn_sign_up)
+    Button sign_up_Button;
+    @BindView(R.id.link_login)
+    TextView login_Link;
+    @BindView(R.id.input_Locality_no) EditText Locality;
+    @BindView(R.id.input_state) EditText State;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    String Url ="http://ec2-18-217-140-197.us-east-2.compute.amazonaws.com:8080/updateSaloon";
+
+    double latitude, longitude;
+
+    String Token ="saloons";
+
+    String Salon_test = null;
+    String tester = "0";
+
+    ConnectionDetector cd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update__details);
 
-        ButterKnife.bind(this);
-
-        adapter =adapter.createFromResource(this, R.array.Categories,android.R.layout.simple_spinner_dropdown_item);
-
-        Type_spinner.setAdapter(adapter);
     }
 
-    @OnClick(R.id.btn_update)
-    public void Update(){
-        update();
-    }
-
-    public void update(){
-        Log.d(TAG, "Update");
+    public void signup() {
+        Log.d(TAG, "Signup");
 
         if (!validate()) {
             onSignupFailed();
             return;
         }
 
-        Update.setEnabled(false);
+        sign_up_Button.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(Update_DetailsActivity.this,
                 R.style.AppTheme_Dark_Dialog);
@@ -88,42 +116,119 @@ public class Update_DetailsActivity extends AppCompatActivity {
 
             }
         });
+        int Type= Type_int;
+        String set_Type;
+        if(Type_int==0){
+            set_Type="0";
+        }else{
+            set_Type="1";
+        }
+        String Locality_text = Locality.getText().toString();
+        String State_text = State.getText().toString();
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
         String email = _emailText.getText().toString();
         String mobile = _mobileText.getText().toString();
         String password = _passwordText.getText().toString();
+        String text_pincode =pincode.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
+
+        String find_address_for= address +" "+Locality_text+" "+State_text + " "+ text_pincode;
+
+        Geocoder gc = new Geocoder(this);
+        try {
+            List<Address> list = gc.getFromLocationName(find_address_for, 1);
+            Address add = list.get(0);
+            latitude = add.getLatitude();
+            longitude =add.getLongitude();
+            Log.e(TAG,"Check lat"+latitude+longitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // TODO: Implement My Api signup logic here.
 
+        final JSONObject Body = new JSONObject();
+
+        try {
+            Body.put("token" ,Token);
+            Body.put("name" ,name);
+            Body.put("address",address);
+            Body.put("locality",Locality_text);
+            Body.put("state",State_text);
+            Body.put("email" ,email);
+            Body.put("phone_no" ,mobile);
+            Body.put("type",set_Type);
+            Body.put("latitude",latitude);
+            Body.put("longitude",longitude);
+            Body.put("password" ,password);
+
+
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(cd.isConnected()) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    try {
+
+
+                        Salon_test = post(Url, Body.toString());
+                        Log.e(TAG, "check  "+Salon_test);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+
+        }else{
+            Toast.makeText(getApplicationContext(),"Internet network isn't there ",Toast.LENGTH_SHORT).show();
+            onSignupFailed();
+        }
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        if(Salon_test.equals(tester)){
+                            onSignupFailed();
+                        }else if(cd.isConnected()) {
+                            onSignupSuccess();
+                        }else{
+
+                            onSignupFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
     }
 
     public void onSignupSuccess() {
-        Update.setEnabled(true);
-        setResult(RESULT_OK, null);
-        finish();
+        sign_up_Button.setEnabled(true);
+        Toast.makeText(getBaseContext(), "Updated", Toast.LENGTH_LONG).show();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Update failed", Toast.LENGTH_LONG).show();
 
-        Update.setEnabled(true);
+        sign_up_Button.setEnabled(true);
     }
 
     public boolean validate() {
         boolean valid = true;
-
+        String Locality_text = Locality.getText().toString();
+        String State_text = State.getText().toString();
         String name = _nameText.getText().toString();
         String address = _addressText.getText().toString();
         String email = _emailText.getText().toString();
@@ -143,6 +248,20 @@ public class Update_DetailsActivity extends AppCompatActivity {
             valid = false;
         } else {
             _addressText.setError(null);
+        }
+
+        if (Locality_text.isEmpty()) {
+            Locality.setError("Enter Valid Locality");
+            valid = false;
+        } else {
+            Locality.setError(null);
+        }
+
+        if (State_text.isEmpty()) {
+            State.setError("Enter Valid State");
+            valid = false;
+        } else {
+            State.setError(null);
         }
 
 
@@ -167,7 +286,7 @@ public class Update_DetailsActivity extends AppCompatActivity {
             _passwordText.setError(null);
         }
 
-        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
+        if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 20 || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
             valid = false;
         } else {
@@ -175,5 +294,19 @@ public class Update_DetailsActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    String post(String url,  String json) throws IOException {
+        OkHttpClient client =new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
     }
 }

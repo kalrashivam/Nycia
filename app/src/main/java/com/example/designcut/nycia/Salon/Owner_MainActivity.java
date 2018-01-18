@@ -14,10 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.designcut.nycia.ConnectionDetector;
 import com.example.designcut.nycia.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -29,13 +35,21 @@ import okhttp3.Response;
 public class Owner_MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    ConnectionDetector cd;
+
+    String email;
+
     //Url for sending data to login server
-    private String Login_Url = "http://18.217.140.197:8080/login";
+    private String Url = "http://ec2-18-217-140-197.us-east-2.compute.amazonaws.com:8080/getSaloonBookings";
     // Setting Mediatype For Okhttp
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 
     String test;
+
+    String res;
+
+    ArrayList<Bookings> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +57,8 @@ public class Owner_MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_owner__main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+       Intent getintent = getIntent();
+       test = getintent.getStringExtra("Login");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -55,21 +70,44 @@ public class Owner_MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+       if(test.equals("0")){
+           Toast.makeText(this,"Login failed",Toast.LENGTH_LONG);
+       }else{
+          getData(test);
+       }
+
+       list =new ArrayList<Bookings>();
 
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    test = post(Login_Url, Body.toString());
-//
-//
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+        cd= new ConnectionDetector(this);
+
+
+
+        final JSONObject Body = new JSONObject();
+        try {
+            Body.put("email",email);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    res = post(Url, Body.toString());
+                    if(res.equals("")){
+                        Toast.makeText(Owner_MainActivity.this,"No bookings", Toast.LENGTH_SHORT).show();
+                    }else if(cd.isConnected()) {
+                        getDataforBookings(res);
+                    }else{
+                        Toast.makeText(Owner_MainActivity.this, "No internet", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -116,12 +154,17 @@ public class Owner_MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_Max_Seats) {
             Intent MaxIntent = new Intent(Owner_MainActivity.this, Max_BookingsActivity.class);
+            MaxIntent.putExtra("Email", email);
             startActivity(MaxIntent);
 
         } else if (id == R.id.nav_Overall_Details) {
             Intent UpdateIntent = new Intent(Owner_MainActivity.this, Update_DetailsActivity.class);
             startActivity(UpdateIntent);
 
+        } else if(id== R.id.add_service){
+            Intent AddService = new Intent(Owner_MainActivity.this,AddServices_ownerActivity.class);
+            AddService.putExtra("json_res",test);
+            startActivity(AddService);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,4 +185,23 @@ public class Owner_MainActivity extends AppCompatActivity
         return response.body().string();
     }
 
+    void getData(String data){
+        try {
+            JSONObject js = new JSONObject(data);
+            email = js.getString("email");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getDataforBookings(String data){
+
+        try {
+            JSONObject js = new JSONObject(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

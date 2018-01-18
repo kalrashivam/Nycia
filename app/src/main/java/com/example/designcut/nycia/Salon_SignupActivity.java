@@ -59,7 +59,7 @@ public class Salon_SignupActivity extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 
-    String Url ="http://10.0.2.2:8080/signup";
+    String Url ="http://ec2-18-217-140-197.us-east-2.compute.amazonaws.com:8080/signup";
 
     String Salon_test = null;
     String tester = "exists";
@@ -141,9 +141,9 @@ public class Salon_SignupActivity extends AppCompatActivity {
         int Type= Type_int;
         String set_Type;
         if(Type_int==0){
-            set_Type="Salon";
+            set_Type="0";
         }else{
-            set_Type="Spa";
+            set_Type="1";
         }
         String Locality_text = Locality.getText().toString();
         String State_text = State.getText().toString();
@@ -191,6 +191,7 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
 
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -203,7 +204,7 @@ public class Salon_SignupActivity extends AppCompatActivity {
 
                     try {
 
-                       
+
                         Salon_test = post(Url, Body.toString());
                         Log.e(TAG, "check  "+Salon_test);
                     } catch (IOException e) {

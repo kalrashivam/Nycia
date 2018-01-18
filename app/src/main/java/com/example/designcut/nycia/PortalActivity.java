@@ -246,9 +246,11 @@ public class PortalActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         if(Type_Login==0){
             Intent myintent = new Intent(PortalActivity.this, MainActivity.class );
+            myintent.putExtra("Login",test);
             startActivity(myintent);
         }else{
             Intent myintent = new Intent(PortalActivity.this, Owner_MainActivity.class);
+            myintent.putExtra("Login",test);
             startActivity(myintent);
         }
     }
