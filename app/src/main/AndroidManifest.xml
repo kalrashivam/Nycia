@@ -40,7 +40,8 @@
         <activity
             android:name=".Salon.Update_DetailsActivity"
             android:theme="@style/MainActivuty" />
-        <activity android:name=".user.State_Search_Activity" />
+        <activity android:name=".user.State_Search_Activity"
+            android:theme="@style/MainActivuty"/>
         <activity android:name=".user.Your_OrdersActivity" />
         <activity android:name=".Salon.AddServices_ownerActivity"
             android:theme="@style/MainActivuty"></activity>

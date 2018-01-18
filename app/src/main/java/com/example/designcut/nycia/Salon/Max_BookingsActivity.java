@@ -35,7 +35,7 @@ public class Max_BookingsActivity extends AppCompatActivity {
     @BindView(R.id.Submit_Button)
     Button Submit;
     //Integer to hold and send the value to api for max bookings in the day
-    static int Value_hold;
+    static int Value_hold = 0;
 
     private String Url = "http://ec2-18-217-140-197.us-east-2.compute.amazonaws.com:8080/setSeats";
 
@@ -54,18 +54,12 @@ public class Max_BookingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_max__bookings);
         ButterKnife.bind(this);
 
-        Value_hold =0;
 
         Intent get = getIntent();
         email = get.getStringExtra("Email");
-        Body= new JSONObject();
 
-        try {
-            Body.put("email",email);
-            Body.put("seats",Value_hold);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+
 
         Value.setText("" +Value_hold);
 
@@ -76,6 +70,16 @@ public class Max_BookingsActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                Body= new JSONObject();
+
+                try {
+                    Body.put("email",email);
+                    Body.put("seats",Value_hold);
+                    Log.e("check", "checker"+email+"  "+Value_hold);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 try {
                     test= post(Url, Body.toString());
                     Log.e("check", "setting seats " +test);

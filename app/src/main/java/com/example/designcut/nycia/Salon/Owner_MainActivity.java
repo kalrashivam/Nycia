@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.designcut.nycia.ConnectionDetector;
 import com.example.designcut.nycia.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -96,7 +97,7 @@ public class Owner_MainActivity extends AppCompatActivity
             public void run() {
                 try {
                     res = post(Url, Body.toString());
-                    if(res.equals("")){
+                    if(res.equals("0")){
                         Toast.makeText(Owner_MainActivity.this,"No bookings", Toast.LENGTH_SHORT).show();
                     }else if(cd.isConnected()) {
                         getDataforBookings(res);
@@ -199,6 +200,7 @@ public class Owner_MainActivity extends AppCompatActivity
 
         try {
             JSONObject js = new JSONObject(data);
+            JSONArray jr =js.getJSONArray("bookings");
         } catch (JSONException e) {
             e.printStackTrace();
         }

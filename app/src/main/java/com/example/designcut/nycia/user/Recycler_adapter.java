@@ -57,9 +57,8 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
             public void onClick(View view) {
                 Intent myintent = new Intent(context, Salon_Details.class);
 
-                Bundle mybundle = new Bundle();
-                mybundle.putInt("position",position);
-                myintent.putExtras(mybundle);
+
+                myintent.putExtras();
 
                 context.startActivity(myintent);
             }

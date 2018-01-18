@@ -11,6 +11,39 @@
         <item>Salon</item>
         <item>spa</item>
     </string-array>
+
+    <string-array name="States">
+        <item>AndhraPradesh</item>
+        <item>ArunachalPradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Delhi</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jammu Kashmir</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>MadhyaPradesh</item>
+    <item>Maharashtra</item>
+        <item>Manipur </item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Orissa</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>TamilNadu</item>
+        <item>Tripura</item>
+        <item>UttarPradesh</item>
+        <item>WestBengal</item>
+        <item>Chhattisgarh</item>
+        <item>Uttarakhand</item>
+        <item>Jharkhand</item>
+        <item>Telangana</item>
+    </string-array>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_Account">Account</string>

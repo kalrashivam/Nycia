@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.designcut.nycia.ConnectionDetector;
 import com.example.designcut.nycia.R;
 
 import org.json.JSONArray;
@@ -44,12 +45,16 @@ public class AddServices_ownerActivity extends AppCompatActivity {
 
     ArrayList<Services> services;
 
+    ConnectionDetector cd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_services_owner);
 
         ButterKnife.bind(this);
+
+         cd = new ConnectionDetector(this);
         services = new ArrayList<Services>();
 
         Intent getIntent = getIntent();
@@ -57,7 +62,7 @@ public class AddServices_ownerActivity extends AppCompatActivity {
 
         try {
             JSONObject js = new JSONObject(test);
-            js.getString("email");
+            email = js.getString("email");
             JSONArray ar =js.getJSONArray("services");
             for(int i=0;i<ar.length();i++){
                 JSONObject jr = ar.getJSONObject(i);
@@ -79,14 +84,15 @@ public class AddServices_ownerActivity extends AppCompatActivity {
 
     @OnClick(R.id.Add_servicebutton)
     public void Clicked(){
-        String Service =Add_Service.getText().toString();
-        String Amount =Add_amount.getText().toString();
+        String Service =Add_Service.getText().toString().toLowerCase();
+        String Amount =Add_amount.getText().toString().toLowerCase();
 
         final JSONObject Body = new JSONObject();
         try {
             Body.put("email",email);
             Body.put("name",Service);
             Body.put("amount",Amount);
+            Log.e("Checking", "    "+email+Service+Amount);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -98,12 +104,13 @@ public class AddServices_ownerActivity extends AppCompatActivity {
                  String checker =   post(Url, Body.toString());
                  Log.e("AddServiceActivity", "Check    "+checker);
 
-                 if(checker.equals("added successfully")){
-
-                     Toast.makeText(AddServices_ownerActivity.this,"ADDed service",Toast.LENGTH_LONG).show();
-                 }else{
-                     Toast.makeText(AddServices_ownerActivity.this,"ADD service failed",Toast.LENGTH_LONG).show();
+                 if(checker.equals("0")){
+                     Toast.makeText(getApplicationContext(),"Can't Add Service", Toast.LENGTH_SHORT).show();
+                 }else if(cd.isConnected()){
+                     Toast.makeText(getApplicationContext(),"Added Service", Toast.LENGTH_SHORT).show();
                  }
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
