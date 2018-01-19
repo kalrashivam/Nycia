@@ -104,11 +104,9 @@ public class AddServices_ownerActivity extends AppCompatActivity {
                  String checker =   post(Url, Body.toString());
                  Log.e("AddServiceActivity", "Check    "+checker);
 
-                 if(checker.equals("0")){
-                     Toast.makeText(getApplicationContext(),"Can't Add Service", Toast.LENGTH_SHORT).show();
-                 }else if(cd.isConnected()){
-                     Toast.makeText(getApplicationContext(),"Added Service", Toast.LENGTH_SHORT).show();
-                 }
+//                    if(cd.isConnected()){
+//                     Toast.makeText(getApplicationContext(),"Added Service", Toast.LENGTH_SHORT).show();
+//                 }
 
 
                 } catch (IOException e) {

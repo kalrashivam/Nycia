@@ -26,7 +26,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/MainActivuty"></activity>
-        <activity android:name=".user.Salon_Details" />
+        <activity android:name=".user.Salon_Details"
+            android:theme="@style/MainActivuty"/>
         <activity
             android:name=".Salon.Owner_MainActivity"
             android:label="@string/title_activity_owner__main"

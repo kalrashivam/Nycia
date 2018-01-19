@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.designcut.nycia.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,8 @@ import java.util.List;
 
 public class BookingsAdaptor extends ArrayAdapter<Bookings> {
 
-  public BookingsAdaptor(Context context, ArrayAdapter<Bookings> bookings){
-      super(context,0, (List<Bookings>) bookings);
+  public BookingsAdaptor(Context context, ArrayList<Bookings> bookings){
+      super(context,0, bookings);
   }
 
 

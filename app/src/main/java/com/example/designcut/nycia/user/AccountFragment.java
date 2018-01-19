@@ -2,6 +2,7 @@ package com.example.designcut.nycia.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.designcut.nycia.PortalActivity;
 import com.example.designcut.nycia.R;
 
 import butterknife.BindView;
@@ -27,6 +29,13 @@ public class AccountFragment extends Fragment {
 
     @BindView(R.id.Your_orders)
     TextView Orders;
+
+    @BindView(R.id.User_name)
+    TextView User_name;
+
+    @BindView(R.id.Log_out)
+    TextView Log_out;
+
     public int Current_state;
     public AccountFragment() {
         // Required empty public constructor
@@ -41,6 +50,10 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
          View view =inflater.inflate(R.layout.fragment_account, container, false);
         ButterKnife.bind( this,view);
+
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("Userinfo",Context.MODE_PRIVATE);
+        String name =sharedPref.getString("name","");
+        User_name.setText("WELCOME " +name);
 
         return view;
 
@@ -59,6 +72,12 @@ public class AccountFragment extends Fragment {
     }
 
 
+
+    @OnClick(R.id.Log_out)
+    public void Logout(){
+        Intent myintent = new Intent(getContext(), PortalActivity.class);
+        startActivity(myintent);
+    }
 
 
 

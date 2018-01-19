@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.designcut.nycia.R;
@@ -48,17 +49,17 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        Data listItem = list.get(position);
+        final Data listItem = list.get(position);
 
-        holder.head.setText(listItem.getHeading());
-        holder.sub.setText(listItem.getSubheading());
+        holder.head.setText(listItem.getName());
+        holder.sub.setText(listItem.getAddress());
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myintent = new Intent(context, Salon_Details.class);
 
 
-                myintent.putExtras();
+                myintent.putExtra("email",listItem.getEmail());
 
                 context.startActivity(myintent);
             }
@@ -78,10 +79,12 @@ public class Recycler_adapter extends RecyclerView.Adapter<Recycler_adapter.View
            public TextView head;
            public TextView sub;
            public Button button;
+           public ImageView logo;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            logo =(ImageView) itemView.findViewById(R.id.Salon_Logo);
             head =(TextView) itemView.findViewById(R.id.Heading);
             sub =(TextView) itemView.findViewById(R.id.Subheading);
             button =(Button) itemView.findViewById(R.id.Make_Booking);

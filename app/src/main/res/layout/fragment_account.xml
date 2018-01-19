@@ -33,15 +33,18 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="monospace"
                     android:text="@string/Welcome"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:id="@+id/User_name"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="monospace"
-                    android:text="@string/login_sign_up"
+                    android:text="Log out"
+                    android:textColor="@android:color/holo_blue_dark"
                     android:textSize="10dp"
+                    android:id="@+id/Log_out"
                     android:visibility="visible"/>
             </LinearLayout>
         </LinearLayout>

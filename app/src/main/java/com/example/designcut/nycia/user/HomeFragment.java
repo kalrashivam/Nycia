@@ -3,6 +3,7 @@ package com.example.designcut.nycia.user;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,7 +80,14 @@ public class HomeFragment extends Fragment {
 
         final JSONObject Body = new JSONObject();
         try {
-            Body.put("state","delhi");
+
+            SharedPreferences sharedPref = this.getActivity().getSharedPreferences("Userinfo",Context.MODE_PRIVATE);
+
+            String state = "delhi";
+            state =sharedPref.getString("state","").toLowerCase();
+
+
+            Body.put("state",state);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -118,7 +126,9 @@ public class HomeFragment extends Fragment {
                                 JSONObject js= jr.getJSONObject(i);
                                 String name =js.getString("name");
                                 String address =js.getString("address");
-                                list.add(new Data(name,address));
+                                String email =js.getString("email");
+                                String logo =js.getString("logo");
+                                list.add(new Data(name,address,logo,email));
                                 adapter = new Recycler_adapter(list, getContext());
 
                                 recyclerView.setAdapter(adapter);

@@ -1,5 +1,7 @@
 package com.example.designcut.nycia.user;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,13 @@ public class State_Search_Activity extends AppCompatActivity {
            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                String Type=(String) adapterView.getItemAtPosition(i);
                Log.e("StateActivity","check"+Type);
+
+               SharedPreferences sharedPref = getSharedPreferences("Userinfo", Context.MODE_PRIVATE);
+
+               SharedPreferences.Editor editor = sharedPref.edit();
+
+               editor.putString("state",Type);
+               editor.apply();
            }
 
            @Override

@@ -65,6 +65,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Make_Booking"/>
+        android:id="@+id/Make_Booking"
+        android:text="make booking"/>
 
 </LinearLayout>
